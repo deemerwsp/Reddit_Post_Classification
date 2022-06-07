@@ -1,207 +1,51 @@
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Project 3: Web Scraping & Classification
+### Contents:
+- [Problem Statement](#Problem-Statement)
+- [Executive Summary](#Executive-Summary)
+- [Data Dictionary](#Data-Dictionary)
+- [Conclusions and Recommendations](#Conclusions-and-Recommendations)
 
-### Description
+### Problem Statement
 
-This project helps you practice webscraping, NLP, and classification models.
-
-### Scenario
-
-You're fresh out of your Data Science bootcamp and looking to break through in the world of freelance data journalism. Nate Silver and co. at FiveThirtyEight have agreed to hear your pitch for a story in two weeks!
-
-Your piece is going to be on how to create a Reddit post that will get the most engagement from Reddit users. Because this is FiveThirtyEight, you're going to have to get data and analyze it in order to make a compelling narrative.
-
-#### Project Summary
-
-In this project, we will practice two major skills. Collecting data by scraping a website and then building a binary predictor.
-
-There are two components to starting a data science problem: the problem statement, and acquiring the data.
-
-For this article, your problem statement will be: _What characteristics of a post on Reddit are most predictive of the overall interaction on a thread (as measured by number of comments)?_
-
-Your method for acquiring the data will be scraping the 'hot' threads as listed on the [Reddit homepage](https://www.reddit.com/). You'll acquire _AT LEAST FOUR_ pieces of information about each thread:
-1. The title of the thread
-2. The subreddit that the thread corresponds to
-3. The length of time it has been up on Reddit
-4. The number of comments on the thread
-
-Once you've got the data, you will build a classification model that, using Natural Language Processing and any other relevant features, predicts whether or not a given Reddit post will have above or below the _median_ number of comments.
-
-**BONUS PROBLEMS**
-1. Scrape the full text of the threads using Selenium.
-2. Write the actual article that you're pitching and turn it into a blog post that you host on your personal blog.
+What characteristics of a post on Reddit are most predictive of the overall interaction on a thread (as measured by number of comments)?
 
 ---
 
-### Requirements
+### Executive Summary
 
-- **Create and compare two models**. One of these must be a random forest, however the other can be a classifier of your choosing: logistic regression, KNN, SVM, etc.
-- A Jupyter Notebook with your analysis for a peer audience of data scientists
-- An executive summary of the results you found
-- A 4 minute presentation outlining your process and findings for a semi-technical audience. The reason we say 'semi-technical' is that FiveThirtyEight wants to see how you plan to explain your findings in your article, and their audience is likely readers who are familiar with and interested in data/statistics, but are not experts. This means that if you'd like to talk about your model works you can, but explain what exactly your model does at a high-level.
+We collected data from the Reddit home page on "hot" posts. The data we collected included several metadata. The metadata that we ended up using in our models was the title of the post, the subreddit it originated from, the length of time it had been up at the time the data was collected, the number of comments (our target for our models), if the posts was text only (no visual components), if the post was restriced to 18 and over, if the visual included a video, and if the post was a spoiler for a film or other media. From the Title and Subreddit, we process the language in order to include text in our models. 
 
- **Pro Tip:** You can find a good example executive summary [here](https://www.proposify.biz/blog/executive-summary).
+With these features, we believe we will be able to more accurately predict if a post is "hot" than the baseline, which is the majority class of 51% of our dataset having fewer comments than the median number of comments for the entire dataset. The models we will use are Logistic Regression and Random Forest. 
 
- **Pro Tip 2:** When building your webscraper, use the `sleep` function to make time in between your individual requests.  Check reddit's API documentation to see how many calls they allow.  
+### Data Dictionary
 
- **Pro Tip 3:** Build your scraper, and rigorously test it on a few pages to make sure it works before setting it loose on all of Reddit.
-
- **Pro tip 4:** Scrape early, scrape often. Unlike earlier projects, you're collecting your own data, and you won't be able to even start modeling until you've collected all of this.
-
-**Pro tip 5:** Save your results to a .csv or .txt file whenever you scrape. If you just keep your results in memory, if you computer crashes or shuts off, or you accidentally close your Jupyter notebook, you'll lose your data.
-
----
-
-### Necessary Deliverables / Submission
-
-- Code and executive summary must be in a clearly commented Jupyter Notebook
-- You must submit your slide deck
-- Materials must be submitted by 10 a.m. Tuesday, June 7 PDT
-
----
-
-### Dataset
-
-1. We'll be utilizing a dataset derived from live web data: [Reddit.com](https://www.reddit.com/)
-
-2. To get the data, we will use the requests library (or urllib, or chromedriver) and BeautifulSoup to scrape the webpage.
-
----
+|Feature|Description|
+|:--|:-:|
+|**title**|processed text of Reddit posts used in natural language processing|
+|**subreddit**|Name of subreddit post originates from|
+|**length_time_seconds**|amount of time in seconds a post has been up at time of collection|
+|**num_comments**|Number of comments on a post at time of collection|
+|**lemmatized**|Lemmatized text from Reddit post title|
+|**num_tokens**|Number of tokens in Lemmatized text in titles|
+|**stemmed_title**|Stemmed text from Reddit post title|
+|**stem_count**|Number of stemmed text in reddit post title|
+|**is_original_content_True**|If a post was original (1 = yes)|
+|**is_self_True**|If a post was text only (1 = yes)|
+|**is_video_True**|If a post included video (1 = yes)|
+|**over_18_True**|If a post was restricted to 18 and over (1 = yes)|
+|**spoiler_True**|If a post was a spoiler for some entertainment (1 = yes)|
+|**num_crossposts**|Number of times a post was cross posted on Reddit|
+|**score**|The number of times a post was upvoted|
+|**subreddit_subscribers**|The number of subscribers to the subreddit of a post|
 
 
-### Additional Resources
-- [Advice on How to Write for a Non-Technical Audience](http://programmers.stackexchange.com/questions/11523/explaining-technical-things-to-non-technical-people)
-- [Documentation for BeautifulSoup can be found here](http://www.crummy.com/software/BeautifulSoup/).
+### Conclusions and Recommendations
 
----
+Based on our analysis, both the Logistic Regression model and the Random Forest model were able to accurately predict if a post was "hot" at a rate of 74%. Random forest had slightly better results. 
 
-### Project Feedback + Evaluation
+The top subreddits that were most predictive of a post's class were wholesomememes, PolicalCompassMemes, SquaredCircle, PoliticalHumor, and IdiotsInCars. Even though wholesomememes had over 1.2M members, posts from this subreddit were .8 times less likely to be "hot". This indicates that even though there are lots of members seeing these posts, they are not interacting with the posts. Political posts elicit high levels of responses. These posts are often opinionated and therefore encourage people to respond with their own opinions or criticisms. IdiotsInCars was interesting because these posts were 3 times more likely to be "hot". Many people enjoy commenting about videos and pictures of poeple doing stupid things in cars. 
 
-Data science is a field in which we apply data to solve real-world problems. Therefore, projects and presentations are means by which we can assess your ability to solve real-world problems in a data-driven manner.
+The top predictive words were "world", "game", "feel", "people", and "cat". Posts that included "world" most likely have to do with current events, which results in high levels of interaction. Posts with "game" have high levels of interaction indicating there are many reddit users who are sports fans and enjoy commenting and entering into dialogues on reddit. "Feel" posts are most often opinionated and therefore elicit responses of other peoples opinions or criticisms. And "cat" posts are .8 times less likely to be hot, meaning fewer people in general comment on posts about cats. 
 
-## Rubric
-Your local instructor will evaluate your project (for the most part) using the following criteria.  You should make sure that you consider and/or follow most if not all of the considerations/recommendations outlined below **while** working through your project.
+The most predictive metadata feature we included was if a post was text only (not including any visual component). These posts made up 5% of our dataset, but were 4 times as likely to be "hot". These posts are most often simple posts about opinions that elicit high levels of interaction. 
 
-For Project 3 the evaluation categories are as follows:<br>
-**The Data Science Process**
-- Problem Statement
-- Data Collection
-- Data Cleaning & EDA
-- Preprocessing & Modeling
-- Evaluation and Conceptual Understanding
-- Conclusion and Recommendations
-
-**Organization and Professionalism**
-- Organization
-- Visualizations
-- Python Syntax and Control Flow
-- Presentation
-
-**Scores will be out of 30 points based on the 10 categories in the rubric.** <br>
-*3 points per section*<br>
-
-| Score | Interpretation |
-| --- | --- |
-| **0** | *Project fails to meet the minimum requirements for this item.* |
-| **1** | *Project meets the minimum requirements for this item, but falls significantly short of portfolio-ready expectations.* |
-| **2** | *Project exceeds the minimum requirements for this item, but falls short of portfolio-ready expectations.* |
-| **3** | *Project meets or exceeds portfolio-ready expectations; demonstrates a thorough understanding of every outlined consideration.* |
-
-
-### The Data Science Process
-
-**Problem Statement**
-- Is it clear what the goal of the project is?
-- What type of model will be developed?
-- How will success be evaluated?
-- Is the scope of the project appropriate?
-- Is it clear who cares about this or why this is important to investigate?
-- Does the student consider the audience and the primary and secondary stakeholders?
-
-**Data Collection**
-- Was enough data gathered to generate a significant result?
-- Was data collected that was useful and relevant to the project?
-- Was data collection and storage optimized through custom functions, pipelines, and/or automation?
-- Was thought given to the server receiving the requests such as considering number of requests per second?
-
-**Data Cleaning and EDA**
-- Are missing values imputed/handled appropriately?
-- Are distributions examined and described?
-- Are outliers identified and addressed?
-- Are appropriate summary statistics provided?
-- Are steps taken during data cleaning and EDA framed appropriately?
-- Does the student address whether or not they are likely to be able to answer their problem statement with the provided data given what they've discovered during EDA?
-
-**Preprocessing and Modeling**
-- Is text data successfully converted to a matrix representation?
-- Are methods such as stop words, stemming, and lemmatization explored?
-- Does the student properly split and/or sample the data for validation/training purposes?
-- Does the student test and evaluate a variety of models to identify a production algorithm (**AT MINIMUM:** two models)?
-- Does the student defend their choice of production model relevant to the data at hand and the problem?
-- Does the student explain how the model works and evaluate its performance successes/downfalls?
-
-**Evaluation and Conceptual Understanding**
-- Does the student accurately identify and explain the baseline score?
-- Does the student select and use metrics relevant to the problem objective?
-- Does the student interpret the results of their model for purposes of inference?
-- Is domain knowledge demonstrated when interpreting results?
-- Does the student provide appropriate interpretation with regards to descriptive and inferential statistics?
-
-**Conclusion and Recommendations**
-- Does the student provide appropriate context to connect individual steps back to the overall project?
-- Is it clear how the final recommendations were reached?
-- Are the conclusions/recommendations clearly stated?
-- Does the conclusion answer the original problem statement?
-- Does the student address how findings of this research can be applied for the benefit of stakeholders?
-- Are future steps to move the project forward identified?
-
-
-### Organization and Professionalism
-
-**Project Organization**
-- Are modules imported correctly (using appropriate aliases)?
-- Are data imported/saved using relative paths?
-- Does the README provide a good executive summary of the project?
-- Is markdown formatting used appropriately to structure notebooks?
-- Are there an appropriate amount of comments to support the code?
-- Are files & directories organized correctly?
-- Are there unnecessary files included?
-- Do files and directories have well-structured, appropriate, consistent names?
-
-**Visualizations**
-- Are sufficient visualizations provided?
-- Do plots accurately demonstrate valid relationships?
-- Are plots labeled properly?
-- Are plots interpreted appropriately?
-- Are plots formatted and scaled appropriately for inclusion in a notebook-based technical report?
-
-**Python Syntax and Control Flow**
-- Is care taken to write human readable code?
-- Is the code syntactically correct (no runtime errors)?
-- Does the code generate desired results (logically correct)?
-- Does the code follows general best practices and style guidelines?
-- Are Pandas functions used appropriately?
-- Are `sklearn` and `NLTK` methods used appropriately?
-
-**Presentation**
-- Is the problem statement clearly presented?
-- Does a strong narrative run through the presentation building toward a final conclusion?
-- Are the conclusions/recommendations clearly stated?
-- Is the level of technicality appropriate for the intended audience?
-- Is the student substantially over or under time?
-- Does the student appropriately pace their presentation?
-- Does the student deliver their message with clarity and volume?
-- Are appropriate visualizations generated for the intended audience?
-- Are visualizations necessary and useful for supporting conclusions/explaining findings?
-
-
------
-
-## Why did we choose this project for you?
-
-This project covers three of the biggest concepts we cover in the class: Classification Modeling, Natural Language Processing and Data Wrangling/Acquisition.
-
-**Part 1** of the project focuses on **Data wrangling/gathering/acquisition**. This is a very important skill as not all the data you will need will be in clean CSVs or a single table in SQL. There is a good chance that wherever you land you will have to gather some data from some unstructured/semi-structured sources; when possible, requesting information from an API, but often scraping it because they don't have an API (or it's terribly documented).
-
-**Part 2** of the project focuses on **Natural Language Processing** and converting standard text data (like Titles and Comments) into a format that allows us to analyze it and use it in modeling.
-
-**Part 3** of the project focuses on **Classification Modeling**. Given that project 2 was a regression focused problem, we needed to give you a classification focused problem to practice the various models, means of assessment and preprocessing associated with classification.
+We recommend you pay attention to which subreddit a post originates from and what type of members that subreddit consists of. High number of members does not always lead to high levels of interaction. Sports, political, and opinionated subreddits and posts often elicit high levels of interaction and are "hot". There are some keywords that are important to look at, but for the most part, they are not as powerful in predicting the level of interaction on a post as the aforementioned features. 
